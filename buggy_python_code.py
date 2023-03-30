@@ -1,5 +1,3 @@
-import sys
-import os
 import yaml
 import flask
 import urllib
@@ -9,7 +7,7 @@ app = flask.Flask(__name__)
 
 @app.route("/")
 def index():
-    """ Index page """
+    """Index page"""
     version = flask.request.args.get("urllib_version")
     url = flask.request.args.get("url")
     return fetch_website(version, url)
@@ -18,7 +16,7 @@ def index():
 CONFIG = {"API_KEY": "771df488714111d39138eb60df756e6b"}
 
 
-class Person(object):
+class Person:
     def __init__(self, name):
         self.name = name
 
@@ -35,16 +33,17 @@ def fetch_website(urllib_version, url):
 
     try:
         http = urllib.PoolManager()
-        r = http.request('GET', url)
+        r = http.request("GET", url)
     except:
-        print('Exception')
+        print("Exception")
 
 
 def load_yaml(filename):
-    """ Load a YAML file """
-    stream = open(filename)
-    deserialized_data = yaml.load(
-        stream, Loader=yaml.Loader)  # deserializing data
+    """Load a YAML file"""
+    with open(filename) as stream:
+        deserialized_data = yaml.load(
+            stream, Loader=yaml.Loader
+        )  # deserializing data
     return deserialized_data
 
 
@@ -54,10 +53,11 @@ def authenticate(password):
     print("Successfully authenticated!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("Vulnerabilities:")
-    print("1. Format string vulnerability: "
-          + "use string={person.__init__.__globals__[CONFIG][API_KEY]}")
+    print(
+        "1. Format string vulnerability: use string={person.__init__.__globals__[CONFIG][API_KEY]}"
+    )
     print("2. Code injection vulnerability: use string=;print('Own code executed') #")
     print("3. Yaml deserialization vulnerability: use string=file.yaml")
     print("4. Use of assert statements vulnerability: run program with -O argument")
